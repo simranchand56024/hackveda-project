@@ -44,11 +44,11 @@ db_password="p6MjB})Xn7b2"
 
 
 
-    conn=pymysql.connect(host=db_host,
-                        port=int(3306),
-                         user=db_username,
-                         passwd=db_password,
-                         db=db_name)
+conn=pymysql.connect(host=db_host,
+                     port=int(3306),
+                     user=db_username,
+                     passwd=db_password,
+                     db=db_name)
 
 
 # In[8]:
