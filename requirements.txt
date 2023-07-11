@@ -1,4 +1,0 @@
-dash==2.6.0
-pandas
-dash-bootstrap-components==1.2.0
-gunicorn
