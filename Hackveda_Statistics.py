@@ -115,7 +115,7 @@ output
 # In[17]:
 
 
-pip install plotly_express==0.4
+get_ipython().system('pip install plotly_express==0.4')
 
 
 # In[18]:
