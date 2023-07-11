@@ -155,9 +155,6 @@ import plotly.graph_objects as go
 # In[22]:
 
 
-get_ipython().system('pip install jupyter-dash -q')
-
-
 # In[23]:
 
 
