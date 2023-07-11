@@ -3,25 +3,6 @@
 
 # In[1]:
 
-
-get_ipython().system('pip install pymysql')
-
-
-# In[2]:
-
-
-get_ipython().system('pip install ipython-sql')
-
-
-# In[3]:
-
-
-get_ipython().system('pip install mysqlclient')
-
-
-# In[4]:
-
-
 import pymysql
 
 
@@ -73,9 +54,6 @@ df
 # In[11]:
 
 
-get_ipython().system('pip install pandasql')
-
-
 # In[12]:
 
 
@@ -83,7 +61,6 @@ import pandasql as ps
 
 
 # In[13]:
-
 
 
 # Using pandas.DatetimeIndex() to extract month and year
@@ -113,9 +90,6 @@ output
 
 
 # In[17]:
-
-
-get_ipython().system('pip install plotly_express==0.4')
 
 
 # In[18]:
