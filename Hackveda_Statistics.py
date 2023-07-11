@@ -91,20 +91,6 @@ output
 
 # In[17]:
 
-
-# In[18]:
-
-
-get_ipython().system('pip install dash')
-get_ipython().system('pip install dash-renderer')
-get_ipython().system('pip install dash_html_components')
-get_ipython().system('pip install dash_core_components')
-get_ipython().system('pip install dash_bootstrap_components')
-
-
-# In[19]:
-
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -486,13 +472,6 @@ plot_2023.show()
 
 
 # In[69]:
-
-
-get_ipython().system('pip install numpy')
-
-
-# In[70]:
-
 
 import numpy as np
 
