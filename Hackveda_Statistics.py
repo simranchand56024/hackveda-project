@@ -111,18 +111,7 @@ from dash.dependencies import Output, Input
 from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
 
-
 # In[22]:
-
-
-# In[23]:
-
-
-from jupyter_dash import JupyterDash
-
-
-# In[24]:
-
 
 import plotly.express as px
 
@@ -485,7 +474,7 @@ from dash.dependencies import Input, Output, State
 # In[72]:
 
 
-app = JupyterDash(__name__, external_stylesheets=[dbc.themes.LUX])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 server = app.server
 
 
@@ -656,5 +645,5 @@ def drop_chart2(n):
 
 
 if __name__ == '__main__':
-        app.run_server(port=8037, mode="inline")
+app.run_server(port=8037)
 
