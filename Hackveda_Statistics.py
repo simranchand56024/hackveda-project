@@ -9,6 +9,7 @@ import plotly.express as px
 import pymysql
 from dash.dependencies import Output, Input, State
 import datetime
+import numpy
 
 
 # Load database credentials from environment variables
