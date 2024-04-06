@@ -10,6 +10,19 @@ import pymysql
 from dash.dependencies import Output, Input, State
 import datetime
 
+
+# Load database credentials from environment variables
+db_name="hackveda_invitation"
+db_host="hackveda.in"
+db_username="hackveda_sahil_sinha"
+db_password="p6MjB})Xn7b2"
+
+# Connect to the database
+conn=pymysql.connect(host=db_host,
+                     port=int(3306),
+                     user=db_username,
+                     passwd=db_password,
+                     db=db_name)
 # Create Dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 
