@@ -50,6 +50,7 @@ months = ["January", "February", "March", "April", "May", "June", "July", "Augus
 
 # Create Dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX])
+server = app.server
 
 # Define layout
 app.layout = dbc.Container([
