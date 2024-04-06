@@ -6,31 +6,28 @@ from dash import html
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import plotly.express as px
-import pymysql
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from dash.dependencies import Output, Input, State
 import datetime
 import numpy
 
-
 # Load database credentials from environment variables
-db_name="hackveda_invitation"
-db_host="hackveda.in"
-db_username="hackveda_sahil_sinha"
-db_password="p6MjB})Xn7b2"
+DB_NAME = os.environ.get("DB_NAME")
+DB_HOST = os.environ.get("DB_HOST")
+DB_USERNAME = os.environ.get("DB_USERNAME")
+DB_PASSWORD = os.environ.get("DB_PASSWORD")
 
-# Connect to the database
-conn=pymysql.connect(host=db_host,
-                     port=int(3306),
-                     user=db_username,
-                     passwd=db_password,
-                     db=db_name)
-
+# Create SQLAlchemy engine
+engine = create_engine(f"mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}")
+Session = sessionmaker(bind=engine)
+session = Session()
 
 # Load data from the database
-df = pd.read_sql_query("SELECT * FROM invitation GROUP BY Email ORDER BY ID DESC", conn)
+df = pd.read_sql_query("SELECT * FROM invitation GROUP BY Email ORDER BY ID DESC", session.bind)
 df_interview = pd.read_sql_query(
     "SELECT DISTINCT Email AS Students, Course, Date FROM invitation WHERE Course LIKE '%interview_preperation%' ORDER BY ID DESC",
-    conn
+    session.bind
 )
 
 # Data cleaning and preprocessing
