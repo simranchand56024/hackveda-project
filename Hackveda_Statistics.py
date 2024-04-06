@@ -19,15 +19,15 @@ DB_USERNAME = os.environ.get("DB_USERNAME")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
 
 # Create SQLAlchemy engine
-engine = create_engine(f"mysql+mysqlconnector://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}")
+engine = create_engine(f"mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}")
 Session = sessionmaker(bind=engine)
 session = Session()
 
 # Update the SQL queries
 df = pd.read_sql_query("SELECT * FROM invitation GROUP BY Email ORDER BY ID DESC", session.bind)
 df_interview = pd.read_sql_query(
-    "SELECT DISTINCT Email AS Students, Course, Date FROM invitation WHERE Course LIKE :course_filter ORDER BY ID DESC",
-    session.bind, params={"course_filter": "%interview_preperation%"}
+    "SELECT DISTINCT Email AS Students, Course, Date FROM invitation WHERE Course LIKE %s ORDER BY ID DESC",
+    session.bind, params=['%interview_preperation%']
 )
 
 # Data cleaning and preprocessing
