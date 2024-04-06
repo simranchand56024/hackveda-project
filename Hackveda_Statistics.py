@@ -23,6 +23,30 @@ conn=pymysql.connect(host=db_host,
                      user=db_username,
                      passwd=db_password,
                      db=db_name)
+
+
+# Load data from the database
+df = pd.read_sql_query("SELECT * FROM invitation GROUP BY Email ORDER BY ID DESC", conn)
+df_interview = pd.read_sql_query(
+    "SELECT DISTINCT Email AS Students, Course, Date FROM invitation WHERE Course LIKE '%interview_preperation%' ORDER BY ID DESC",
+    conn
+)
+
+# Data cleaning and preprocessing
+df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+df["year"] = df["Date"].dt.year
+df["month"] = df["Date"].dt.month_name()
+df["month_year"] = df["Date"].dt.strftime('%B %Y')
+
+df_interview["Date"] = pd.to_datetime(df_interview["Date"], errors="coerce")
+df_interview["year"] = df_interview["Date"].dt.year
+df_interview["month"] = df_interview["Date"].dt.month_name()
+df_interview["month_year"] = df_interview["Date"].dt.strftime('%B %Y')
+df_interview["day"] = df_interview["Date"].dt.date
+
+# Define the order of months
+months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
 # Create Dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 
@@ -42,7 +66,7 @@ app.layout = dbc.Container([
                 figure=px.bar(df.groupby('year').size().reset_index(name='Students'), x='year', y='Students')
             )
         ]),
-    
+
     dbc.Row([
         dbc.Col([
             html.H4('Total Interns Monthly Breakdown'),], style={"margin-top": "60px", 'textAlign': 'center', "font-size": "70"}),
@@ -55,18 +79,20 @@ app.layout = dbc.Container([
             ),
             dcc.Graph(id='month-graph')
         ]),
-    
-    dbc.Col([
-        html.H4('Students Enrolled In Interview Preparation'),
-        html.H5('Monthly Breakdown'),], style={"margin-top": "60px", 'textAlign': 'center', "font-size": "70"}),
-        html.Label(['Year'], style={'font-weight': 'bold', "margin-left": "38px"}),
-        dcc.Dropdown(
-            id='interview-year-dropdown',
-            options=[{'label': year, 'value': year} for year in df_interview['year'].unique()],
-            value=df_interview['year'].max(),
-            style={"width": "60%", "verticalAlign": "middle", "margin-left": "20px", "margin-top": "10px"}
-        ),
-        dcc.Graph(id='interview-month-graph'),
+
+    dbc.Row([
+        dbc.Col([
+            html.H4('Students Enrolled In Interview Preparation'),
+            html.H5('Monthly Breakdown'),], style={"margin-top": "60px", 'textAlign': 'center', "font-size": "70"}),
+            html.Label(['Year'], style={'font-weight': 'bold', "margin-left": "38px"}),
+            dcc.Dropdown(
+                id='interview-year-dropdown',
+                options=[{'label': year, 'value': year} for year in df_interview['year'].unique()],
+                value=df_interview['year'].max(),
+                style={"width": "60%", "verticalAlign": "middle", "margin-left": "20px", "margin-top": "10px"}
+            ),
+            dcc.Graph(id='interview-month-graph')
+        ]),
     
     dbc.Row([
         dbc.Col([
@@ -135,12 +161,10 @@ def update_options(dropdown_3):
 def update_data(n_clicks, dropdown_3, dropdown_4):
     global dff
     dff = df_interview.copy()
-    if dropdown_3 != []:
+    if dropdown_3 is not None:
         dff = dff[dff['year'] == dropdown_3]
-    if dropdown_4 != []:
+    if dropdown_4 is not None:
         dff = dff[dff['month_year'] == dropdown_4]
-    else:
-        dff = df_interview.copy()
     return dff.to_dict(orient='records')
 
 @app.callback(
@@ -150,16 +174,9 @@ def update_data(n_clicks, dropdown_3, dropdown_4):
 def drop_chart2(n):
     dff_1 = dff.copy()
     dff_pivot = pd.pivot_table(dff_1, ('Students'), index=['Date'], aggfunc='count').reset_index()
-    
-    # Convert 'Date' column to string format with only the date part
-    dff_pivot['Date'] = pd.to_datetime(dff_pivot['Date']).dt.date
-    
+    dff_pivot['Date'] = dff_pivot['Date'].dt.date  # Extracting only the date component
     plotd_2023_jan = px.bar(dff_pivot, x="Date", y="Students", orientation='v')
-    plotd_2023_jan.update_layout(
-        bargap=0.23,
-        height=724,
-        xaxis={'type': 'category'}  # No need for tickformat since dates are converted to strings
-    )
+    plotd_2023_jan.update_layout(bargap=0.23, height=724, xaxis={'type': 'category'})
     return plotd_2023_jan
 
 # Run the Dash app
